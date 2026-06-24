@@ -43,7 +43,7 @@ public class Desktop extends JFrame {
         return ChartFactory.createHistogram(
                 histogram.title(),
                 histogram.xAxis(),
-                histogram.xAxis(),
+                histogram.yAxis(),
                 datasetWith(histogram)
         );
     }
@@ -68,7 +68,7 @@ public class Desktop extends JFrame {
                 .title("Movies Per Decade")
                 .xAxis("Decade")
                 .yAxis("Count")
-                .legend("Kata 4")
+                .legend("Kata 5")
                 .use(Movie::year);
     }
 
