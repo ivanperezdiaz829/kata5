@@ -5,25 +5,33 @@ import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
+import software.ulpgc.kata5.architecture.io.Store;
+import software.ulpgc.kata5.architecture.model.Movie;
 import software.ulpgc.kata5.architecture.viewmodel.Histogram;
+import software.ulpgc.kata5.architecture.viewmodel.HistogramBuilder;
 
 import javax.swing.*;
+import java.io.IOException;
+import java.util.stream.Stream;
 
 public class Desktop extends JFrame {
 
-    private Desktop() {
+    private static Store store;
+
+    private Desktop(Store store) {
+        this.store = store;
         this.setTitle("Histogram");
         this.setResizable(false);
         this.setSize(800, 600);
         this.setLocationRelativeTo(null);
     }
 
-    public static Desktop create() {
-        return new Desktop();
+    public static Desktop create(Store store) {
+        return new Desktop(store);
     }
 
-    public Desktop display(Histogram histogram) {
-        this.getContentPane().add(chartPanelWith(histogram));
+    public Desktop display() throws IOException {
+        this.getContentPane().add(chartPanelWith(histogram()));
         return this;
     }
 
@@ -52,5 +60,19 @@ public class Desktop extends JFrame {
             series.add(bin, histogram.count(bin));
         }
         return series;
+    }
+
+    private static Histogram histogram() throws IOException {
+        return HistogramBuilder
+                .with(movies())
+                .title("Movies Per Decade")
+                .xAxis("Decade")
+                .yAxis("Count")
+                .legend("Kata 4")
+                .use(Movie::year);
+    }
+
+    private static Stream<Movie> movies() throws IOException {
+        return store.movies();
     }
 }
